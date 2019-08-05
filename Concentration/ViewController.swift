@@ -18,14 +18,34 @@ class ViewController: UIViewController {
         }
     }
     
+    var scoreCount = 0 {
+        didSet {
+            scoreCountLabel.text = "Score: \(scoreCount)"
+        }
+    }
+    
     @IBOutlet var cardButtons: [UIButton]!
     
     @IBOutlet weak var flipCountLabel: UILabel!
     
+    @IBOutlet weak var scoreCountLabel: UILabel!
+    
+    @IBAction func newGameButton(_ sender: UIButton) {
+        for index in cardButtons.indices {
+            let button = cardButtons[index]
+            button.setTitle("", for: UIControl.State.normal)
+            button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        }
+        game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+        emojiChoices = chooseTheme()
+        flipCountLabel.text = "Flips: 0"
+        scoreCountLabel.text = "Score: 0"
+    }
+    
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCount += 1
+        game.flipCounter(count: &flipCount)
         if let cardNumber = cardButtons.firstIndex(of: sender) {
-            game.chooseCard(at: cardNumber)
+            game.chooseCard(at: cardNumber, mutateScore: &scoreCount)
             updateViewFromModel()
         } else {
             print ("cant find choosen card")
