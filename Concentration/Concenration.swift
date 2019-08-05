@@ -34,6 +34,8 @@ class Concentration
         }
     }
     
+    //  MARK: Create and suffle array of cards
+    
     init(numberOfPairsOfCards: Int){
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
