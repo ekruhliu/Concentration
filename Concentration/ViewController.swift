@@ -10,25 +10,29 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+    private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     
-    var flipCount = 0 {
+    var numberOfPairsOfCards: Int {
+        return (cardButtons.count + 1) / 2  // if u need only get u can not write get
+    }                                       // but if u have get and set u must write it
+    
+    private(set) var flipCount = 0 {
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
     
-    var scoreCount = 0 {
+    private(set) var scoreCount = 0 {
         didSet {
             scoreCountLabel.text = "Score: \(scoreCount)"
         }
     }
     
-    @IBOutlet var cardButtons: [UIButton]!
+    @IBOutlet private var cardButtons: [UIButton]!
     
-    @IBOutlet weak var flipCountLabel: UILabel!
+    @IBOutlet private weak var flipCountLabel: UILabel!
     
-    @IBOutlet weak var scoreCountLabel: UILabel!
+    @IBOutlet private weak var scoreCountLabel: UILabel!
     
     @IBAction func newGameButton(_ sender: UIButton) {
         for index in cardButtons.indices {
