@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var scoreCountLabel: UILabel!
     
-    @IBAction func newGameButton(_ sender: UIButton) {
+    @IBAction private func newGameButton(_ sender: UIButton) {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             button.setTitle("", for: UIControl.State.normal)
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         scoreCountLabel.text = "Score: 0"
     }
     
-    @IBAction func touchCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         game.flipCounter(count: &flipCount)
         if let cardNumber = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber, mutateScore: &scoreCount)
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func updateViewFromModel() {
+    private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -70,25 +70,35 @@ class ViewController: UIViewController {
         }
     }
     
-    lazy var emojiChoices = chooseTheme()
+    private lazy var emojiChoices = chooseTheme()
     
-    func chooseTheme() -> [String] {
+    private func chooseTheme() -> [String] {
         let themesArray = [
             ["🦇", "👽", "💀", "😈", "🎃", "👻", "🧟‍♂️", "🧛🏻‍♂️", "🤖", "🤡"],
             ["🏃🏻‍♂️", "🏀", "🏉", "🎾", "🥊", "🏊🏻‍♂️", "🏆", "🏂", "🏋🏻‍♂️", "⛹🏿‍♂️"],
             ["🍏", "🧀", "🥐", "🍔", "🌭", "🍕", "🍟", "🥪", "🍩", "🌯"]
         ]
-        let randomIndex = Int(arc4random_uniform(UInt32(themesArray.count)))
-        return themesArray[randomIndex]
+        return themesArray[themesArray.count.arc4random]
     }
     
-    var emoji = [Int:String]()
+    private var emoji = [Int:String]()
     
-    func emoji(for card: Card) -> String {
+    private func emoji(for card: Card) -> String {
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
         }
         return emoji[card.identifier] ?? "?"
+    }
+}
+
+extension Int {
+    var arc4random: Int {
+        if self > 0 {
+            return Int(arc4random_uniform(UInt32(self)))
+        } else if self < 0 {
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
     }
 }
